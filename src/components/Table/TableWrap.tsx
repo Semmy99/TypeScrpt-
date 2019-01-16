@@ -1,8 +1,10 @@
 import * as React from "react";
 import TableRow from "./TableRow";
+import Aside from "./Aside";
 import { data } from "../../Constants/tableRowData";
 import "bootstrap/dist/css/bootstrap.css";
 import { Table, Button, InputGroup, Input } from "reactstrap";
+
 
 export interface ITRow {
   id: number;
@@ -10,10 +12,17 @@ export interface ITRow {
   row: string;
 }
 
+export interface ITable {
+  id: number;
+  tRows: Array<ITRow>;
+  nameBtn: string;
+}
+
 interface State {
-  dataRow: Array<ITRow> | null;
+  newTRows: Array<ITable> | null;
   name: string;
   descr: string;
+  idTable: number | null;
 }
 
 class TableWrap extends React.Component<any, State> {
@@ -21,52 +30,72 @@ class TableWrap extends React.Component<any, State> {
     super(props);
 
     this.state = {
-      dataRow: null,
+      newTRows: null,
       name: "",
-      descr: ""
+      descr: "",
+      idTable: null
     };
   }
 
   componentWillMount() {
-    this.setState({ dataRow: [...data] });
+
+    data.map(tableData => {
+      if (tableData.id === 111) this.setState({ idTable: tableData.id });
+    })
+    this.setState({ newTRows: [...data] });
   }
-  // function for delete rowElem
+
+  // Удаление
   delRow = (id: number): void => {
-    const { dataRow } = this.state;
+    const { newTRows, idTable } = this.state;
 
-    const newDataRow = dataRow.filter(
-      (row, i): any => {
-        if (row.id !== id) return row;
+    const newtRows = newTRows.map((row): any => {
+      if (row.id === idTable) {
+
+        row.tRows = row.tRows.filter((rowEl): any => {
+          if (rowEl.id !== id) return rowEl;
+        });
       }
-    );
-    this.setState({ dataRow: newDataRow });
+      return row
+    });
+    this.setState({ newTRows: newtRows });
   };
 
-  // changeValue = (e: any, nameInput: any): void => {
-  //   const value = e.target.value;
-  //   this.setState({ [nameInput]: value });
-  // };
 
+  // добавление строк в таблицу
   addNewRow = (): void => {
-    const { dataRow, name, descr } = this.state;
+    const { newTRows, name, descr, idTable } = this.state;
+    // если ничего не заполнили
     if (!name && !descr) return;
-    console.log("dataRow", dataRow);
+
     const createdId = Math.random() * 0.5;
-    dataRow.push({ id: createdId, name: name, row: descr });
-    const addedRow = dataRow;
-    console.log("addedRow", addedRow);
-    this.setState({ dataRow: addedRow });
+    newTRows.map((item) => {
+      if (item.id === idTable) {
+        item.tRows.push({ id: createdId, name: name, row: descr });
+        const addedRow = newTRows;
+        this.setState({ newTRows: addedRow, name: '', descr: '' });
+      }
+    })
   };
+
+  changeTable = (id: number) => {
+    const { idTable } = this.state;
+    // Не делать лишний запрос
+    if (idTable === id) return
+
+    this.setState({ idTable: id })
+  }
 
   render() {
-    const { dataRow, name, descr } = this.state;
-
+    const { newTRows, name, descr, idTable } = this.state;
     return (
       <div>
+        {newTRows.map((item) => { return (<Aside nameButton={item.nameBtn} id={item.id} key={item.id} changeTable={this.changeTable} />) })}
+
         <Table dark>
           <tbody>
-            {dataRow.map(elem => (
-              <TableRow elem={elem} key={elem.id} delRow={this.delRow} />
+            {newTRows.map(elem => (
+              idTable === elem.id && elem.tRows.map((rows) => (<TableRow elem={rows} key={rows.id} delRow={this.delRow} />))
             ))}
           </tbody>
         </Table>
