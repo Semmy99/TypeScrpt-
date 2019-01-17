@@ -3,7 +3,10 @@ import TableRow from "./TableRow";
 import Aside from "./Aside";
 import { data } from "../../Constants/tableRowData";
 import "bootstrap/dist/css/bootstrap.css";
-import { Table, Button, InputGroup, Input } from "reactstrap";
+import {
+  Table, Button, InputGroup, Input,
+  Modal, ModalHeader, ModalBody, ModalFooter
+} from "reactstrap";
 
 
 export interface ITRow {
@@ -23,6 +26,9 @@ interface State {
   name: string;
   descr: string;
   idTable: number | null;
+  modal: boolean;
+  modalName: string;
+  modalDescr: string;
 }
 
 class TableWrap extends React.Component<any, State> {
@@ -33,7 +39,10 @@ class TableWrap extends React.Component<any, State> {
       newTRows: null,
       name: "",
       descr: "",
-      idTable: null
+      idTable: null,
+      modal: false,
+      modalName: '',
+      modalDescr: '',
     };
   }
 
@@ -77,7 +86,7 @@ class TableWrap extends React.Component<any, State> {
       }
     })
   };
-
+  // меняет таблицу
   changeTable = (id: number) => {
     const { idTable } = this.state;
     // Не делать лишний запрос
@@ -86,8 +95,24 @@ class TableWrap extends React.Component<any, State> {
     this.setState({ idTable: id })
   }
 
+  // Для модалки
+  toggle = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
+  // changeValue = (e: any, nameInput: string) => {
+  //   const value = e.target.value;
+  //   this.setState({ [nameInput]: value })
+  // }
+
+  editRow = () => {
+    this.setState({ modal: false })
+  }
+
   render() {
-    const { newTRows, name, descr, idTable } = this.state;
+    const { newTRows, name, descr, idTable, modal, modalName, modalDescr } = this.state;
     return (
       <div>
         {newTRows.map((item) => { return (<Aside nameButton={item.nameBtn} id={item.id} key={item.id} changeTable={this.changeTable} />) })}
@@ -95,7 +120,7 @@ class TableWrap extends React.Component<any, State> {
         <Table dark>
           <tbody>
             {newTRows.map(elem => (
-              idTable === elem.id && elem.tRows.map((rows) => (<TableRow elem={rows} key={rows.id} delRow={this.delRow} />))
+              idTable === elem.id && elem.tRows.map((rows) => (<TableRow elem={rows} key={rows.id} delRow={this.delRow} toggle={this.toggle} />))
             ))}
           </tbody>
         </Table>
@@ -123,6 +148,33 @@ class TableWrap extends React.Component<any, State> {
             value={descr}
           />
         </InputGroup>
+
+        <div>
+          <Modal isOpen={modal} toggle={this.toggle} className={this.props.className}>
+            <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+            <ModalBody>
+              <Input
+                placeholder="Name"
+                value={modalName}
+                onChange={e => {
+                  this.setState({ modalName: e.target.value });
+                }}
+              />
+              <Input
+                placeholder="Description"
+                value={modalDescr}
+                onChange={e => {
+                  this.setState({ modalDescr: e.target.value });
+                }}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.editRow}>Do Something</Button>{' '}
+              <Button color="secondary" onClick={this.toggle}>Cancel</Button>{' '}
+            </ModalFooter>
+          </Modal>
+        </div>
+
       </div>
     );
   }
