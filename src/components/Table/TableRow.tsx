@@ -10,6 +10,7 @@ export interface ITableRow {
 export interface IProps {
   elem: ITableRow;
   delRow: Function;
+  // toggle: (id: number) => void;
   toggle: Function;
 }
 
@@ -25,16 +26,17 @@ export default class TableRow extends React.Component<IProps, Object> {
   render() {
     const { name, row, id } = this.props.elem;
     const { delRow, toggle } = this.props;
+
     return (
       <tr>
         <th>{name}</th>
         <th>{row}</th>
         <th>
-          <Button color="danger" onClick={() => delRow(id)}>
+          <Button color="danger" onClick={() => { delRow(id) }}>
             delete blyat
           </Button>{" "}
 
-          <Button color="warning" onClick={() => { toggle() }}>Edit blyaaaat!</Button>{' '}
+          <Button color="warning" onClick={(e: any) => { toggle(id, e) }}>Edit blyaaaat!</Button>{' '}
         </th>
       </tr>
     );

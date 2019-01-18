@@ -96,16 +96,21 @@ class TableWrap extends React.Component<any, State> {
   }
 
   // Для модалки
-  toggle = () => {
+  toggle = (id?: any, e?: any) => {
+
+    console.log('ID', id, typeof id)
+    console.log('e', e)
+
+
     this.setState({
       modal: !this.state.modal
     });
   }
 
-  // changeValue = (e: any, nameInput: string) => {
-  //   const value = e.target.value;
-  //   this.setState({ [nameInput]: value })
-  // }
+  changeValue = (e: any, nameInput: string) => {
+    const value = e.target.value;
+    this.setState({ [nameInput]: value } as Pick<State, keyof State>)
+  }
 
   editRow = () => {
     this.setState({ modal: false })
@@ -135,16 +140,12 @@ class TableWrap extends React.Component<any, State> {
         <InputGroup>
           <Input
             placeholder="Name"
-            onChange={e => {
-              this.setState({ name: e.target.value });
-            }}
+            onChange={e => { this.changeValue(e, 'name') }}
             value={name}
           />
           <Input
             placeholder="Description"
-            onChange={e => {
-              this.setState({ descr: e.target.value });
-            }}
+            onChange={e => { this.changeValue(e, 'descr') }}
             value={descr}
           />
         </InputGroup>
