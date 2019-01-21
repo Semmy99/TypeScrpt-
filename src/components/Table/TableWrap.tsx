@@ -26,6 +26,7 @@ interface State {
   name: string;
   descr: string;
   idTable: number | null;
+  idRow: number | null;
   modal: boolean;
   modalName: string;
   modalDescr: string;
@@ -40,6 +41,7 @@ class TableWrap extends React.Component<any, State> {
       name: "",
       descr: "",
       idTable: null,
+      idRow: null,
       modal: false,
       modalName: '',
       modalDescr: '',
@@ -96,16 +98,16 @@ class TableWrap extends React.Component<any, State> {
   }
 
   // Для модалки
-  toggle = (id?: any, e?: any) => {
+  toggle = () => { this.setState({ modal: !this.state.modal }); }
 
-    console.log('ID', id, typeof id)
-    console.log('e', e)
-
+  openModal = (id?: any, e?: any) => {
 
     this.setState({
-      modal: !this.state.modal
+      modal: !this.state.modal,
+      idRow: id,
     });
   }
+
 
   changeValue = (e: any, nameInput: string) => {
     const value = e.target.value;
@@ -113,7 +115,22 @@ class TableWrap extends React.Component<any, State> {
   }
 
   editRow = () => {
-    this.setState({ modal: false })
+    const { newTRows, idTable, idRow,
+      modalName, modalDescr
+    } = this.state;
+
+    newTRows.map((elem) => {
+      if (elem.id === idTable) {
+        elem.tRows.map((rows) => {
+          if (rows.id === idRow) {
+            rows.name = modalName;
+            rows.row = modalDescr;
+          }
+        })
+      }
+    })
+
+    this.setState({ modal: false, modalName: '', modalDescr: '' })
   }
 
   render() {
@@ -125,7 +142,7 @@ class TableWrap extends React.Component<any, State> {
         <Table dark>
           <tbody>
             {newTRows.map(elem => (
-              idTable === elem.id && elem.tRows.map((rows) => (<TableRow elem={rows} key={rows.id} delRow={this.delRow} toggle={this.toggle} />))
+              idTable === elem.id && elem.tRows.map((rows) => (<TableRow elem={rows} key={rows.id} delRow={this.delRow} toggle={this.openModal} />))
             ))}
           </tbody>
         </Table>
