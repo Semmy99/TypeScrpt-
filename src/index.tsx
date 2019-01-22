@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import Main from '../src/components/Table/Main'
 import './index.css';
 
-import TableWrap from './components/Table/TableWrap';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
-  <TableWrap />,
+  <Main />,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();

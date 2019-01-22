@@ -1,23 +1,40 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import './Hello.css';
+import {
 
-export interface Props {
-	name: string;
-	enthusiasmLevel?: number;
-}
+	Nav, NavItem, NavLink
+} from "reactstrap";
+// export interface Props {
+// 	name?: string;
+// 	enthusiasmLevel?: number;
+// }
 
-class Hello extends React.Component<Props, object> {
+class Hello extends React.Component<any, object> {
 	render() {
-		const { name, enthusiasmLevel = 1 } = this.props;
-
-		if (enthusiasmLevel <= 0) {
-			throw new Error('You could be a little more enthusiastic. :D');
-		}
 
 		return (
+
+
+
 			<div className="hello">
+
+				<Nav>
+					<NavItem>
+						<NavLink href="#">
+							<Link to='/'>Admin</Link>
+						</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink href="#">
+							<Link to='/table'>Admin2</Link>
+						</NavLink>
+					</NavItem>
+				</Nav>
+				<hr />
+
 				<div className="greeting">
-					Hello {name + getExclamationMarks(enthusiasmLevel)}
+					Hello
 				</div>
 			</div>
 		);
@@ -25,9 +42,3 @@ class Hello extends React.Component<Props, object> {
 }
 
 export default Hello;
-
-// helpers
-
-function getExclamationMarks(numChars: number) {
-	return Array(numChars + 1).join('!');
-}

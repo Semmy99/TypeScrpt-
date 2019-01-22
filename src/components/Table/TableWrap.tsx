@@ -1,12 +1,22 @@
 import * as React from "react";
+import { Link } from 'react-router-dom';
+
 import TableRow from "./TableRow";
 import Aside from "./Aside";
+// import Hello from '../Hello';
 import { data } from "../../Constants/tableRowData";
 import "bootstrap/dist/css/bootstrap.css";
 import {
   Table, Button, InputGroup, Input,
-  Modal, ModalHeader, ModalBody, ModalFooter
+  Modal, ModalHeader, ModalBody, ModalFooter,
+  Nav, NavItem, NavLink
 } from "reactstrap";
+
+
+// using CommonJS modules
+// const Router = require('react-router').Router
+// const Route = require('react-router').Route
+// const Switch = require('react-router').Switch
 
 
 export interface ITRow {
@@ -135,8 +145,31 @@ class TableWrap extends React.Component<any, State> {
 
   render() {
     const { newTRows, name, descr, idTable, modal, modalName, modalDescr } = this.state;
+
+
+
     return (
       <div>
+
+        {/* <Switch>
+          <Route exact path='/hello' component={Hello} />
+          <Route path='/table' component={TableWrap} />
+        </Switch> */}
+
+        <Nav>
+          <NavItem>
+            <NavLink href="#">
+              <Link to='/'>Admin</Link>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="#">
+              <Link to='/table'>Admin2</Link>
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <hr />
+
         {newTRows.map((item) => { return (<Aside nameButton={item.nameBtn} id={item.id} key={item.id} changeTable={this.changeTable} />) })}
 
         <Table dark>

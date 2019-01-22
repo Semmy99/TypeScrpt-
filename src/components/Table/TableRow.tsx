@@ -14,10 +14,6 @@ export interface IProps {
   toggle: Function;
 }
 
-// interface State {
-// 	currentEnthusiasm: number;
-// }
-
 export default class TableRow extends React.Component<IProps, Object> {
   constructor(props: IProps) {
     super(props);
